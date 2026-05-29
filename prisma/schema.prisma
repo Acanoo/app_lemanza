@@ -1,0 +1,192 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum VehicleType {
+  HYBRID
+  HATCHBACK
+  PICKUP
+  PANEL
+  BLINDADO
+  SEDAN
+  SUV
+  MICROBUS
+  CAMION
+}
+
+enum Transmission {
+  AUTOMATICO
+  MECANICO
+}
+
+enum FuelType {
+  GASOLINA
+  DIESEL
+  ELECTRICO
+  HIBRIDO
+}
+
+enum Drivetrain {
+  DOS_POR_DOS
+  CUATRO_POR_CUATRO
+  AWD
+}
+
+enum VehicleStatus {
+  NUEVO
+  USADO
+  RESERVADO
+  VENDIDO
+  DISPONIBLE
+}
+
+enum SubscriberStatus {
+  ACTIVE
+  UNSUBSCRIBED
+}
+
+enum RoleName {
+  ADMIN
+  SALES
+  EDITOR
+}
+
+model Vehicle {
+  id              String                @id @default(cuid())
+  slug            String                @unique
+  internalCode    String                @unique
+  type            VehicleType
+  brand           String
+  model           String
+  trim            String?
+  year            Int
+  mileage         Int
+  priceUsd        Decimal?              @db.Decimal(12, 2)
+  priceGtq        Decimal               @db.Decimal(12, 2)
+  manualPriceGtq  Decimal?              @db.Decimal(12, 2)
+  transmission    Transmission
+  fuel            FuelType
+  drivetrain      Drivetrain
+  status          VehicleStatus         @default(DISPONIBLE)
+  motor           String
+  exteriorColor   String
+  interiorColor   String
+  vin             String?
+  doors           Int
+  displacement    String?
+  equipment       String[]
+  warranty        String?
+  observations    String?
+  has360          Boolean               @default(false)
+  branchId        String
+  branch          Branch                @relation(fields: [branchId], references: [id])
+  images          VehicleImage[]
+  spec            VehicleSpec?
+  quoteRequests   QuoteRequest[]
+  simulations     FinancingSimulation[]
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  @@index([brand, model, year])
+  @@index([type, status])
+}
+
+model VehicleImage {
+  id        String  @id @default(cuid())
+  url       String
+  alt       String
+  position  Int     @default(0)
+  vehicleId String
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+}
+
+model VehicleSpec {
+  id             String  @id @default(cuid())
+  cylinders      Int?
+  horsepower     Int?
+  torque         String?
+  seating        Int?
+  origin         String?
+  marketSource   String?
+  raw            Json?
+  vehicleId      String  @unique
+  vehicle        Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+}
+
+model Branch {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  address   String
+  phone     String
+  mapsUrl   String
+  wazeUrl   String
+  vehicles  Vehicle[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model QuoteRequest {
+  id          String   @id @default(cuid())
+  firstName   String
+  lastName    String
+  phone       String
+  email       String
+  message     String?
+  captcha     String?
+  utmCampaign String?
+  utmSource   String?
+  utmMedium   String?
+  utmContent  String?
+  utmTerm     String?
+  vehicleId   String?
+  vehicle     Vehicle? @relation(fields: [vehicleId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+model NewsletterSubscriber {
+  id          String           @id @default(cuid())
+  name        String
+  email       String           @unique
+  status      SubscriberStatus @default(ACTIVE)
+  utmCampaign String?
+  utmSource   String?
+  utmMedium   String?
+  utmContent  String?
+  utmTerm     String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model FinancingSimulation {
+  id          String   @id @default(cuid())
+  priceGtq    Decimal  @db.Decimal(12, 2)
+  downPayment Decimal  @db.Decimal(12, 2)
+  annualRate  Decimal  @db.Decimal(5, 2)
+  termMonths  Int
+  monthlyFee  Decimal  @db.Decimal(12, 2)
+  vehicleId   String?
+  vehicle     Vehicle? @relation(fields: [vehicleId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  roleId       String
+  role         Role     @relation(fields: [roleId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Role {
+  id    String   @id @default(cuid())
+  name  RoleName @unique
+  users User[]
+}
