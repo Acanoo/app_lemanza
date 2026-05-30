@@ -9,28 +9,28 @@ const branches = [
   {
     name: "Agencia Yurrita",
     address: "Ruta 6, 9-18, Zona 4, Guatemala",
-    phone: "2299-0101",
+    phone: "+502 4016-7882",
     mapsUrl: "https://maps.google.com/?q=Ruta+6+9-18+Zona+4+Guatemala",
     wazeUrl: "https://waze.com/ul?q=Ruta%206%209-18%20Zona%204%20Guatemala"
   },
   {
     name: "Agencia Roosevelt",
     address: "Km. 14 Calzada Roosevelt, 5-25 Zona 3 de Mixco, Guatemala",
-    phone: "2299-0202",
+    phone: "+502 4016-7882",
     mapsUrl: "https://maps.google.com/?q=Km+14+Calzada+Roosevelt+Mixco",
     wazeUrl: "https://waze.com/ul?q=Km%2014%20Calzada%20Roosevelt%20Mixco"
   },
   {
     name: "Agencia Zona 10",
     address: "10 avenida 14-73, zona 10 Guatemala",
-    phone: "2299-0303",
+    phone: "+502 4016-7882",
     mapsUrl: "https://maps.google.com/?q=10+avenida+14-73+zona+10+Guatemala",
     wazeUrl: "https://waze.com/ul?q=10%20avenida%2014-73%20zona%2010%20Guatemala"
   },
   {
     name: "Agencia Virtual",
     address: "Atención digital para toda Guatemala",
-    phone: "2299-0404",
+    phone: "+502 4016-7882",
     mapsUrl: "https://maps.google.com/?q=Guatemala",
     wazeUrl: "https://waze.com/ul?q=Guatemala"
   }
@@ -118,7 +118,7 @@ async function main() {
         displacement: motor.split(" ")[0],
         equipment: ["Aire acondicionado", "Pantalla táctil", "Cámara de retroceso", "Bluetooth", "Bolsas de aire"],
         warranty: index % 3 === 0 ? "Garantía de agencia vigente" : "Garantía limitada disponible",
-        observations: "Unidad inspeccionada, lista para financiamiento y entrega en Guatemala.",
+        observations: null,
         has360: index % 5 === 0,
         status: index % 9 === 0 ? VehicleStatus.RESERVADO : VehicleStatus.DISPONIBLE,
         branchId: branch.id,

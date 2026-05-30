@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Facebook, Instagram, Mail, Phone } from "lucide-react";
 import { NewsletterForm } from "@/components/newsletter-form";
+import { contactPhoneDisplay } from "@/lib/contact";
 
 export function SiteFooter() {
   return (
@@ -12,7 +13,7 @@ export function SiteFooter() {
             Marketplace automotriz para Guatemala con vehículos inspeccionados, planes de financiamiento y asesoría personalizada.
           </p>
           <div className="mt-5 flex gap-3 text-white/80">
-            <Phone size={18} /> PBX {process.env.PBX || "2299-0000"}
+            <Phone size={18} /> PBX {process.env.PBX || contactPhoneDisplay}
           </div>
         </div>
         <div>

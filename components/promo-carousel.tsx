@@ -4,6 +4,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { contactPhoneDisplay } from "@/lib/contact";
 import { promoSlides } from "@/lib/vehicle-visuals";
 
 export function PromoCarousel() {
@@ -50,7 +51,7 @@ export function PromoCarousel() {
       </button>
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between gap-4 bg-black/55 px-6 py-4 text-sm font-semibold text-white">
         <span className="flex items-center gap-2"><MapPin size={17} /> Agencia Zona 10 · Roosevelt · Yurrita</span>
-        <span>Agenda tu cita: 2299-0000</span>
+        <span>Agenda tu cita: {contactPhoneDisplay}</span>
       </div>
     </div>
   );

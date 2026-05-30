@@ -29,7 +29,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
     ["Tracción", vehicle.drivetrain], ["Motor", vehicle.motor], ["Combustible", vehicle.fuel],
     ["Color exterior", vehicle.exteriorColor], ["Color interior", vehicle.interiorColor], ["Ubicación", vehicle.branch.name],
     ["VIN", vehicle.vin || "Disponible bajo solicitud"], ["Número de puertas", vehicle.doors], ["Cilindraje", vehicle.displacement || "-"],
-    ["Garantía", vehicle.warranty || "-"], ["Observaciones", vehicle.observations || "-"]
+    ["Garantía", vehicle.warranty || "-"]
   ];
 
   return (

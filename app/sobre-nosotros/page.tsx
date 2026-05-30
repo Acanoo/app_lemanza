@@ -1,9 +1,10 @@
+import Image from "next/image";
 import type { LucideIcon } from "lucide-react";
-import { BadgeCheck, Eye, Gem, Handshake, HeartHandshake, ShieldCheck, Sparkles, Target } from "lucide-react";
+import { BadgeCheck, ClipboardCheck, Eye, HandHeart, ShieldCheck, Target, TimerReset, Users } from "lucide-react";
 
 export const metadata = {
   title: "Sobre Nosotros",
-  description: "Conoce la misión, visión y valores de Lemanza Motores."
+  description: "Conoce quiénes somos, misión, visión, valores y equipo de Lemanza Motores."
 };
 
 const pillars: { title: string; copy: string; Icon: LucideIcon }[] = [
@@ -19,52 +20,45 @@ const pillars: { title: string; copy: string; Icon: LucideIcon }[] = [
   }
 ];
 
-const values: { title: string; copy: string; Icon: LucideIcon }[] = [
-  {
-    title: "Confianza",
-    Icon: ShieldCheck,
-    copy: "Construimos relaciones claras y seguras en cada etapa de la compra."
-  },
-  {
-    title: "Transparencia",
-    Icon: Handshake,
-    copy: "Compartimos información honesta para que cada cliente decida con tranquilidad."
-  },
-  {
-    title: "Calidad",
-    Icon: Gem,
-    copy: "Seleccionamos vehículos importados que respondan a altos estándares."
-  },
-  {
-    title: "Servicio",
-    Icon: HeartHandshake,
-    copy: "Acompañamos antes, durante y después de cada entrega."
-  },
-  {
-    title: "Compromiso",
-    Icon: BadgeCheck,
-    copy: "Trabajamos para superar expectativas y fortalecer la satisfacción del cliente."
-  },
-  {
-    title: "Asesoría personalizada",
-    Icon: Sparkles,
-    copy: "Orientamos cada búsqueda según presupuesto, estilo de vida y necesidad de movilidad."
-  }
+const values: { title: string; Icon: LucideIcon }[] = [
+  { title: "Actitud de servicio", Icon: HandHeart },
+  { title: "Cumplimiento", Icon: BadgeCheck },
+  { title: "Disciplina", Icon: TimerReset },
+  { title: "Respeto", Icon: ShieldCheck }
+];
+
+const team = [
+  { name: "Dary López", role: "Gerente General", level: "top" },
+  { name: "Emerson Santizo", role: "Jefe de operaciones", level: "lead" },
+  { name: "Nancy Escobar", role: "Jefa de logística y comercio exterior", level: "lead" },
+  { name: "Alisson Turuy", role: "Jefe de Administración de Personal y Finanzas Corporativas", level: "lead" },
+  { name: "Marco Cano", role: "Jefe de servicio técnico", level: "lead" },
+  { name: "Jennifer Marroquín", role: "Jefe de departamento Comercial y Marketing", level: "lead" }
 ];
 
 export default function AboutPage() {
+  const [manager, ...leaders] = team;
+
   return (
     <div className="bg-secondary/60">
-      <section className="container-page section">
-        <p className="font-bold text-accent">Sobre Nosotros</p>
-        <h1 className="mt-2 max-w-4xl text-4xl font-black leading-tight md:text-5xl">
-          Importamos vehículos con confianza, transparencia y servicio personalizado
-        </h1>
-        <p className="mt-4 max-w-3xl text-slate-600">
-          En Lemanza Motores conectamos a nuestros clientes con automóviles importados de alta calidad, precios competitivos y un acompañamiento cercano en todo el proceso.
-        </p>
+      <section className="relative overflow-hidden bg-primary text-white">
+        <Image src="/brand/integrantes.png" alt="Equipo Lemanza Motores" fill className="object-cover opacity-70" priority />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/80 to-primary/20" />
+        <div className="container-page relative grid min-h-[620px] content-center py-20">
+          <div className="max-w-3xl">
+            <p className="font-bold text-accent">Sobre Nosotros</p>
+            <h1 className="mt-3 text-5xl font-black leading-tight md:text-6xl">¿Quiénes somos?</h1>
+            <div className="mt-8 max-w-2xl rounded-lg border border-accent/70 bg-primary/78 p-6 shadow-soft backdrop-blur">
+              <p className="text-lg leading-8 text-white/90">
+                Somos una empresa local comprometida con la excelencia en logística y transporte. Nos especializamos en diseñar soluciones integrales de movilidad para diversos sectores industriales y comerciales, sin descuidar la calidez y eficiencia que el público general merece.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <div className="mt-10 grid gap-5 lg:grid-cols-2">
+      <section className="container-page section">
+        <div className="grid gap-5 lg:grid-cols-2">
           {pillars.map(({ title, copy, Icon }) => (
             <article key={title} className="rounded-lg bg-white p-7 shadow-soft">
               <div className="flex h-12 w-12 items-center justify-center rounded-md bg-accent/12 text-accent">
@@ -78,15 +72,42 @@ export default function AboutPage() {
 
         <div className="mt-12">
           <p className="font-bold text-accent">Nuestros principios</p>
-          <h2 className="mt-2 text-3xl font-black">Valores que guían cada venta</h2>
-          <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {values.map(({ title, copy, Icon }) => (
-              <article key={title} className="rounded-lg border bg-white p-6 shadow-soft">
+          <h2 className="mt-2 text-3xl font-black">Nuestros valores</h2>
+          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {values.map(({ title, Icon }) => (
+              <article key={title} className="rounded-lg bg-primary p-6 text-white shadow-soft">
                 <Icon className="text-accent" />
-                <h3 className="mt-4 text-xl font-black">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{copy}</p>
+                <h3 className="mt-6 text-xl font-black uppercase">{title}</h3>
               </article>
             ))}
+          </div>
+        </div>
+
+        <div className="mt-12">
+          <p className="font-bold text-accent">Equipo Lemanza</p>
+          <h2 className="mt-2 text-3xl font-black">Organigrama</h2>
+          <div className="mt-6 overflow-hidden rounded-lg bg-white shadow-soft">
+            <div className="relative aspect-[16/7] min-h-[260px]">
+              <Image src="/brand/integrantes.png" alt="Integrantes de Lemanza Motores" fill className="object-cover" />
+            </div>
+          </div>
+
+          <div className="mt-8 grid justify-items-center gap-6">
+            <article className="w-full max-w-md rounded-lg border-2 border-accent bg-white p-6 text-center shadow-soft">
+              <Users className="mx-auto text-accent" />
+              <h3 className="mt-3 text-2xl font-black">{manager.name}</h3>
+              <p className="mt-1 font-semibold text-primary">{manager.role}</p>
+            </article>
+            <div className="h-8 w-px bg-border" />
+            <div className="grid w-full gap-5 md:grid-cols-2 xl:grid-cols-5">
+              {leaders.map((member) => (
+                <article key={member.name} className="rounded-lg border bg-white p-5 text-center shadow-soft">
+                  <ClipboardCheck className="mx-auto text-accent" />
+                  <h3 className="mt-3 text-lg font-black">{member.name}</h3>
+                  <p className="mt-2 text-sm font-semibold leading-6 text-slate-600">{member.role}</p>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>

@@ -2,6 +2,7 @@ import { Mail, MessageCircle, Phone } from "lucide-react";
 import { NewsletterForm } from "@/components/newsletter-form";
 import { QuoteForm } from "@/components/quote-form";
 import { Button } from "@/components/ui/button";
+import { contactPhoneDisplay } from "@/lib/contact";
 import { whatsappUrl } from "@/lib/utils";
 
 export const metadata = { title: "Contacto" };
@@ -14,7 +15,7 @@ export default function ContactPage() {
           <p className="font-bold text-accent">Hablemos</p>
           <h1 className="mt-2 text-4xl font-black">Contacto</h1>
           <div className="mt-8 grid gap-4">
-            <p className="flex items-center gap-3"><Phone className="text-accent" /> PBX {process.env.PBX || "2299-0000"}</p>
+            <p className="flex items-center gap-3"><Phone className="text-accent" /> PBX {process.env.PBX || contactPhoneDisplay}</p>
             <p className="flex items-center gap-3"><Mail className="text-accent" /> ventas@lemanzamotores.gt</p>
             <Button asChild variant="accent"><a href={whatsappUrl("Hola, quiero contactar a Lemanza Motores.")} target="_blank" rel="noreferrer"><MessageCircle size={18} /> WhatsApp</a></Button>
           </div>

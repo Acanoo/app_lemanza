@@ -12,6 +12,11 @@ export const metadata: Metadata = {
   },
   description: "Marketplace automotriz premium en Guatemala con catálogo, financiamiento, cotización y sucursales.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+  icons: {
+    icon: "/brand/logo-icon.png",
+    shortcut: "/brand/logo-icon.png",
+    apple: "/brand/logo-icon.png"
+  },
   openGraph: {
     title: "Lemanza Motores",
     description: "Autos nuevos y usados para Guatemala.",
