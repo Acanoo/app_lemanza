@@ -18,11 +18,10 @@ export default async function HomePage() {
   return (
     <>
       <section className="relative overflow-hidden bg-slate-950 text-white">
-        <Image src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1800&q=85" alt="Autos destacados" fill className="object-cover opacity-45" priority />
+        <Image src="/brand/hero-lemanza.jpeg" alt="Vehículo importado Lemanza Motores" fill className="object-cover opacity-55" priority />
         <div className="container-page relative grid min-h-[560px] items-center py-16">
           <div className="max-w-3xl">
-            <p className="mb-4 inline-flex rounded-full bg-white/12 px-4 py-2 text-sm font-bold text-accent">Marketplace automotriz en Guatemala</p>
-            <h1 className="text-5xl font-black leading-tight sm:text-6xl">Autos nuevos y usados con financiamiento a tu medida</h1>
+            <h1 className="text-5xl font-black leading-tight sm:text-6xl">Tu próximo destino ya tiene forma: el modelo que buscas, te busca a ti.</h1>
             <p className="mt-5 max-w-2xl text-lg text-white/80">Explora inventario inspeccionado, cotiza en línea y calcula tus cuotas antes de visitar la agencia.</p>
           </div>
         </div>

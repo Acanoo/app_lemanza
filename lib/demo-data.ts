@@ -1,6 +1,4 @@
-import { VehicleType, Transmission, FuelType, Drivetrain, VehicleStatus } from "@prisma/client";
-import { calculateGuatemalaPrice } from "@/lib/pricing";
-import { vehiclePhotoSets } from "@/lib/vehicle-visuals";
+import { Drivetrain, FuelType, Transmission, VehicleStatus, VehicleType } from "@prisma/client";
 
 const branch = {
   id: "demo-branch-yurrita",
@@ -13,55 +11,354 @@ const branch = {
   updatedAt: new Date()
 };
 
-const baseVehicles = [
-  ["Toyota", "Corolla Cross", "LE", 2024, VehicleType.SUV, 1200, 31500, "2.0L Dynamic Force"],
-  ["Toyota", "RAV4", "XLE", 2023, VehicleType.SUV, 16400, 34500, "2.5L"],
-  ["Subaru", "Forester", "Premium", 2022, VehicleType.SUV, 31200, 28900, "2.5L Boxer"],
-  ["Kia", "Picanto", "EX", 2024, VehicleType.HATCHBACK, 600, 15900, "1.2L"],
-  ["Lexus", "RX350L", "Luxury", 2020, VehicleType.SUV, 45800, 43900, "3.5L V6"],
-  ["Mazda", "CX-5", "Touring", 2022, VehicleType.SUV, 27400, 27500, "2.5L Skyactiv"]
-] as const;
+type DemoVehicleSeed = {
+  brand: string;
+  model: string;
+  trim: string;
+  year: number;
+  type: VehicleType;
+  mileage: number;
+  priceGtq: number;
+  motor: string;
+  transmission: Transmission;
+  fuel: FuelType;
+  drivetrain: Drivetrain;
+  status: VehicleStatus;
+  exteriorColor: string;
+  image: string;
+};
 
-export const demoVehicles = baseVehicles.map(([brand, model, trim, year, type, mileage, priceUsd, motor], index) => {
+const baseVehicles: DemoVehicleSeed[] = [
+  {
+    brand: "Toyota",
+    model: "Prius",
+    trim: "Hybrid",
+    year: 2016,
+    type: VehicleType.HYBRID,
+    mileage: 82000,
+    priceGtq: 92000,
+    motor: "1.8L Híbrido",
+    transmission: Transmission.AUTOMATICO,
+    fuel: FuelType.HIBRIDO,
+    drivetrain: Drivetrain.DOS_POR_DOS,
+    status: VehicleStatus.USADO,
+    exteriorColor: "Blanco perla",
+    image: "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Honda",
+    model: "Insight",
+    trim: "EX",
+    year: 2019,
+    type: VehicleType.HYBRID,
+    mileage: 54000,
+    priceGtq: 128000,
+    motor: "1.5L Híbrido",
+    transmission: Transmission.AUTOMATICO,
+    fuel: FuelType.HIBRIDO,
+    drivetrain: Drivetrain.DOS_POR_DOS,
+    status: VehicleStatus.DISPONIBLE,
+    exteriorColor: "Azul metálico",
+    image: "https://images.unsplash.com/photo-1590362891991-f776e747a588?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Kia",
+    model: "Picanto",
+    trim: "EX",
+    year: 2018,
+    type: VehicleType.HATCHBACK,
+    mileage: 68000,
+    priceGtq: 25000,
+    motor: "1.2L",
+    transmission: Transmission.AUTOMATICO,
+    fuel: FuelType.GASOLINA,
+    drivetrain: Drivetrain.DOS_POR_DOS,
+    status: VehicleStatus.USADO,
+    exteriorColor: "Rojo",
+    image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Hyundai",
+    model: "Grand i10",
+    trim: "GL",
+    year: 2020,
+    type: VehicleType.HATCHBACK,
+    mileage: 42000,
+    priceGtq: 42000,
+    motor: "1.2L",
+    transmission: Transmission.MECANICO,
+    fuel: FuelType.GASOLINA,
+    drivetrain: Drivetrain.DOS_POR_DOS,
+    status: VehicleStatus.DISPONIBLE,
+    exteriorColor: "Plata",
+    image: "https://images.unsplash.com/photo-1502877338535-766e1452684a?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Toyota",
+    model: "Hilux",
+    trim: "SRV",
+    year: 2017,
+    type: VehicleType.PICKUP,
+    mileage: 98000,
+    priceGtq: 165000,
+    motor: "2.8L Turbo Diesel",
+    transmission: Transmission.MECANICO,
+    fuel: FuelType.DIESEL,
+    drivetrain: Drivetrain.CUATRO_POR_CUATRO,
+    status: VehicleStatus.USADO,
+    exteriorColor: "Gris grafito",
+    image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Ford",
+    model: "Ranger",
+    trim: "XLT",
+    year: 2021,
+    type: VehicleType.PICKUP,
+    mileage: 56000,
+    priceGtq: 198000,
+    motor: "3.2L Diesel",
+    transmission: Transmission.AUTOMATICO,
+    fuel: FuelType.DIESEL,
+    drivetrain: Drivetrain.CUATRO_POR_CUATRO,
+    status: VehicleStatus.DISPONIBLE,
+    exteriorColor: "Azul profundo",
+    image: "https://images.unsplash.com/photo-1551830820-330a71b99659?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Nissan",
+    model: "NV200",
+    trim: "Cargo",
+    year: 2018,
+    type: VehicleType.PANEL,
+    mileage: 91000,
+    priceGtq: 65000,
+    motor: "1.6L",
+    transmission: Transmission.MECANICO,
+    fuel: FuelType.GASOLINA,
+    drivetrain: Drivetrain.DOS_POR_DOS,
+    status: VehicleStatus.USADO,
+    exteriorColor: "Blanco",
+    image: "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Renault",
+    model: "Kangoo",
+    trim: "Express",
+    year: 2020,
+    type: VehicleType.PANEL,
+    mileage: 62000,
+    priceGtq: 89000,
+    motor: "1.6L",
+    transmission: Transmission.MECANICO,
+    fuel: FuelType.GASOLINA,
+    drivetrain: Drivetrain.DOS_POR_DOS,
+    status: VehicleStatus.DISPONIBLE,
+    exteriorColor: "Blanco",
+    image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Jeep",
+    model: "Grand Cherokee",
+    trim: "Blindada",
+    year: 2015,
+    type: VehicleType.BLINDADO,
+    mileage: 76000,
+    priceGtq: 215000,
+    motor: "3.6L V6",
+    transmission: Transmission.AUTOMATICO,
+    fuel: FuelType.GASOLINA,
+    drivetrain: Drivetrain.CUATRO_POR_CUATRO,
+    status: VehicleStatus.DISPONIBLE,
+    exteriorColor: "Negro",
+    image: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Toyota",
+    model: "Prado",
+    trim: "Blindada",
+    year: 2014,
+    type: VehicleType.BLINDADO,
+    mileage: 88000,
+    priceGtq: 250000,
+    motor: "4.0L V6",
+    transmission: Transmission.AUTOMATICO,
+    fuel: FuelType.GASOLINA,
+    drivetrain: Drivetrain.CUATRO_POR_CUATRO,
+    status: VehicleStatus.RESERVADO,
+    exteriorColor: "Gris",
+    image: "https://images.unsplash.com/photo-1533106418989-88406c7cc8ca?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Toyota",
+    model: "Corolla",
+    trim: "LE",
+    year: 2017,
+    type: VehicleType.SEDAN,
+    mileage: 74000,
+    priceGtq: 88000,
+    motor: "1.8L",
+    transmission: Transmission.AUTOMATICO,
+    fuel: FuelType.GASOLINA,
+    drivetrain: Drivetrain.DOS_POR_DOS,
+    status: VehicleStatus.USADO,
+    exteriorColor: "Plata",
+    image: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Honda",
+    model: "Civic",
+    trim: "EX",
+    year: 2020,
+    type: VehicleType.SEDAN,
+    mileage: 51000,
+    priceGtq: 132000,
+    motor: "2.0L",
+    transmission: Transmission.AUTOMATICO,
+    fuel: FuelType.GASOLINA,
+    drivetrain: Drivetrain.DOS_POR_DOS,
+    status: VehicleStatus.DISPONIBLE,
+    exteriorColor: "Azul",
+    image: "https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Mazda",
+    model: "CX-5",
+    trim: "Touring",
+    year: 2019,
+    type: VehicleType.SUV,
+    mileage: 65000,
+    priceGtq: 145000,
+    motor: "2.5L Skyactiv",
+    transmission: Transmission.AUTOMATICO,
+    fuel: FuelType.GASOLINA,
+    drivetrain: Drivetrain.AWD,
+    status: VehicleStatus.USADO,
+    exteriorColor: "Rojo",
+    image: "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Toyota",
+    model: "RAV4",
+    trim: "XLE",
+    year: 2021,
+    type: VehicleType.SUV,
+    mileage: 39000,
+    priceGtq: 205000,
+    motor: "2.5L",
+    transmission: Transmission.AUTOMATICO,
+    fuel: FuelType.GASOLINA,
+    drivetrain: Drivetrain.AWD,
+    status: VehicleStatus.DISPONIBLE,
+    exteriorColor: "Blanco",
+    image: "https://images.unsplash.com/photo-1606016159991-dfe4f2746ad5?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Hyundai",
+    model: "H1",
+    trim: "GL",
+    year: 2016,
+    type: VehicleType.MICROBUS,
+    mileage: 118000,
+    priceGtq: 98000,
+    motor: "2.5L Diesel",
+    transmission: Transmission.MECANICO,
+    fuel: FuelType.DIESEL,
+    drivetrain: Drivetrain.DOS_POR_DOS,
+    status: VehicleStatus.USADO,
+    exteriorColor: "Gris",
+    image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Toyota",
+    model: "Hiace",
+    trim: "GL",
+    year: 2019,
+    type: VehicleType.MICROBUS,
+    mileage: 87000,
+    priceGtq: 178000,
+    motor: "2.8L Diesel",
+    transmission: Transmission.MECANICO,
+    fuel: FuelType.DIESEL,
+    drivetrain: Drivetrain.DOS_POR_DOS,
+    status: VehicleStatus.DISPONIBLE,
+    exteriorColor: "Blanco",
+    image: "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Isuzu",
+    model: "NPR",
+    trim: "Furgón",
+    year: 2015,
+    type: VehicleType.CAMION,
+    mileage: 135000,
+    priceGtq: 125000,
+    motor: "3.0L Diesel",
+    transmission: Transmission.MECANICO,
+    fuel: FuelType.DIESEL,
+    drivetrain: Drivetrain.DOS_POR_DOS,
+    status: VehicleStatus.USADO,
+    exteriorColor: "Blanco",
+    image: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1400&q=80"
+  },
+  {
+    brand: "Mitsubishi",
+    model: "Fuso Canter",
+    trim: "Carga",
+    year: 2018,
+    type: VehicleType.CAMION,
+    mileage: 102000,
+    priceGtq: 168000,
+    motor: "3.0L Diesel",
+    transmission: Transmission.MECANICO,
+    fuel: FuelType.DIESEL,
+    drivetrain: Drivetrain.DOS_POR_DOS,
+    status: VehicleStatus.DISPONIBLE,
+    exteriorColor: "Azul",
+    image: "https://images.unsplash.com/photo-1501700493788-fa1a4fc9fe62?auto=format&fit=crop&w=1400&q=80"
+  }
+];
+
+export const demoVehicles = baseVehicles.map((vehicle, index) => {
   const internalCode = `LM-DEMO-${String(index + 1).padStart(3, "0")}`;
   return {
     id: internalCode,
-    slug: `${brand}-${model}-${year}-${internalCode}`.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+    slug: `${vehicle.brand}-${vehicle.model}-${vehicle.year}-${internalCode}`.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
     internalCode,
-    type,
-    brand,
-    model,
-    trim,
-    year,
-    mileage,
-    priceUsd,
-    priceGtq: calculateGuatemalaPrice({ brand, type, year, mileage, priceUsd }),
-    manualPriceGtq: null,
-    transmission: Transmission.AUTOMATICO,
-    fuel: FuelType.GASOLINA,
-    drivetrain: index % 2 ? Drivetrain.AWD : Drivetrain.DOS_POR_DOS,
-    status: index === 2 ? VehicleStatus.RESERVADO : VehicleStatus.DISPONIBLE,
-    motor,
-    exteriorColor: ["Blanco", "Gris grafito", "Negro", "Azul profundo", "Plata", "Rojo"][index],
+    type: vehicle.type,
+    brand: vehicle.brand,
+    model: vehicle.model,
+    trim: vehicle.trim,
+    year: vehicle.year,
+    mileage: vehicle.mileage,
+    priceUsd: null,
+    priceGtq: vehicle.priceGtq,
+    manualPriceGtq: vehicle.priceGtq,
+    transmission: vehicle.transmission,
+    fuel: vehicle.fuel,
+    drivetrain: vehicle.drivetrain,
+    status: vehicle.status,
+    motor: vehicle.motor,
+    exteriorColor: vehicle.exteriorColor,
     interiorColor: "Negro",
     vin: null,
-    doors: 5,
-    displacement: motor.split(" ")[0],
+    doors: vehicle.type === VehicleType.PICKUP || vehicle.type === VehicleType.CAMION ? 2 : 5,
+    displacement: vehicle.motor.split(" ")[0],
     equipment: ["Aire acondicionado", "Pantalla táctil", "Cámara de retroceso", "Bluetooth", "Bolsas de aire"],
     warranty: "Garantía limitada disponible",
-    observations: "Unidad demo para vista local sin base de datos.",
+    observations: "Unidad demo para vista local sin base de datos. Precios de referencia entre Q25,000 y Q250,000.",
     has360: index === 0,
     branchId: branch.id,
     branch,
     spec: null,
-    images: vehiclePhotoSets[index % vehiclePhotoSets.length].map((url, photoIndex) => ({
+    images: [vehicle.image, vehicle.image].map((url, photoIndex) => ({
       id: `${internalCode}-${photoIndex}`,
       url,
-      alt: `${brand} ${model} ${year}`,
+      alt: `${vehicle.brand} ${vehicle.model} ${vehicle.year}`,
       position: photoIndex,
       vehicleId: internalCode
     })),
-    createdAt: new Date(),
-    updatedAt: new Date()
+    createdAt: new Date(Date.now() - index * 86400000),
+    updatedAt: new Date(Date.now() - index * 86400000)
   };
 });
