@@ -4,7 +4,9 @@ import { prisma } from "@/lib/prisma";
 import { quoteSchema } from "@/lib/validations/quote";
 
 export async function POST(request: Request) {
-  const payload = await request.json();
+  const payload = await request.json().catch(() => null);
+  if (!payload) return NextResponse.json({ error: "Invalid JSON payload" }, { status: 400 });
+
   const parsed = quoteSchema.safeParse(payload);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
 

@@ -5,13 +5,23 @@ export function middleware(request: NextRequest) {
   if (!protectedPath) return NextResponse.next();
 
   const header = request.headers.get("authorization");
-  const expectedEmail = process.env.ADMIN_EMAIL || "admin@lemanzamotores.gt";
-  const expectedPassword = process.env.ADMIN_PASSWORD || "CambiarEstaClave123";
+  const expectedEmail = process.env.ADMIN_EMAIL;
+  const expectedPassword = process.env.ADMIN_PASSWORD;
+
+  if (!expectedEmail || !expectedPassword) {
+    return new NextResponse("Admin credentials are not configured", { status: 503 });
+  }
 
   if (header?.startsWith("Basic ")) {
-    const decoded = atob(header.replace("Basic ", ""));
-    const [email, password] = decoded.split(":");
-    if (email === expectedEmail && password === expectedPassword) return NextResponse.next();
+    try {
+      const decoded = atob(header.replace("Basic ", ""));
+      const separatorIndex = decoded.indexOf(":");
+      const email = decoded.slice(0, separatorIndex);
+      const password = decoded.slice(separatorIndex + 1);
+      if (separatorIndex > -1 && email === expectedEmail && password === expectedPassword) return NextResponse.next();
+    } catch {
+      // Fall through to the auth challenge below.
+    }
   }
 
   return new NextResponse("Admin protegido", {

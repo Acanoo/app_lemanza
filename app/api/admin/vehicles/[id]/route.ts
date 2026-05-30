@@ -4,7 +4,9 @@ import { vehiclePatchSchema } from "@/lib/validations/vehicle";
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const payload = await request.json();
+  const payload = await request.json().catch(() => null);
+  if (!payload) return NextResponse.json({ error: "Invalid JSON payload" }, { status: 400 });
+
   const parsed = vehiclePatchSchema.safeParse(payload);
   if (!parsed.success) return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
 

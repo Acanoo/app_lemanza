@@ -1,6 +1,7 @@
 "use client";
 
 import { SlidersHorizontal } from "lucide-react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,8 +19,12 @@ function SelectFilter({ name, label, options }: { name: string; label: string; o
         className="h-11 rounded-md border border-input bg-white px-3 text-sm"
         onChange={(event) => {
           const next = new URLSearchParams(params);
-          event.target.value ? next.set(name, event.target.value) : next.delete(name);
-          router.push(`/catalogo?${next.toString()}`);
+          if (event.target.value) {
+            next.set(name, event.target.value);
+          } else {
+            next.delete(name);
+          }
+          router.push(next.size ? `/catalogo?${next.toString()}` : "/catalogo");
         }}
       >
         <option value="">Todos</option>
@@ -40,8 +45,12 @@ function NumberFilter({ name, label }: { name: string; label: string }) {
         defaultValue={params.get(name) || ""}
         onBlur={(event) => {
           const next = new URLSearchParams(params);
-          event.target.value ? next.set(name, event.target.value) : next.delete(name);
-          router.push(`/catalogo?${next.toString()}`);
+          if (event.target.value) {
+            next.set(name, event.target.value);
+          } else {
+            next.delete(name);
+          }
+          router.push(next.size ? `/catalogo?${next.toString()}` : "/catalogo");
         }}
       />
     </div>
@@ -72,7 +81,7 @@ export function CatalogFilters() {
           <NumberFilter name="minMileage" label="Km min." />
           <NumberFilter name="maxMileage" label="Km max." />
         </div>
-        <div className="flex items-end"><Button asChild variant="outline"><a href="/catalogo">Limpiar filtros</a></Button></div>
+        <div className="flex items-end"><Button asChild variant="outline"><Link href="/catalogo">Limpiar filtros</Link></Button></div>
       </div>
     </aside>
   );
