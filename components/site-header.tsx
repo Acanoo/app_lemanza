@@ -10,6 +10,7 @@ import { whatsappUrl } from "@/lib/utils";
 const nav = [
   ["Inicio", "/"],
   ["Catálogo", "/catalogo"],
+  ["Sobre Nosotros", "/sobre-nosotros"],
   ["Servicios", "/servicios"],
   ["Beneficios", "/beneficios"],
   ["Sucursales", "/sucursales"],

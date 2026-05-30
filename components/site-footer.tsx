@@ -19,6 +19,7 @@ export function SiteFooter() {
           <h3 className="font-bold">Explorar</h3>
           <div className="mt-4 grid gap-2 text-sm text-white/75">
             <Link href="/catalogo">Catálogo</Link>
+            <Link href="/sobre-nosotros">Sobre Nosotros</Link>
             <Link href="/servicios">Servicios</Link>
             <Link href="/beneficios">Beneficios</Link>
             <Link href="/sucursales">Sucursales</Link>
