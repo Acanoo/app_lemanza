@@ -1,15 +1,47 @@
 import { Drivetrain, FuelType, Transmission, VehicleStatus, VehicleType } from "@prisma/client";
 
-const branch = {
-  id: "demo-branch-yurrita",
-  name: "Agencia Yurrita",
-  address: "Ruta 6, 9-18, Zona 4, Guatemala",
+const demoBranches = [
+  {
+    id: "demo-branch-roosevelt",
+    name: "Sucursal Lemanza Motores",
+    address: "Km 14.5 Calz. Roosevelt Mixco, Calzada Roosevelt, Cdad. de Guatemala",
+    mapsUrl: "https://maps.google.com/?q=Km+14.5+Calz.+Roosevelt+Mixco+Calzada+Roosevelt+Ciudad+de+Guatemala",
+    wazeUrl: "https://waze.com/ul?q=Km%2014.5%20Calz.%20Roosevelt%20Mixco%20Calzada%20Roosevelt%20Ciudad%20de%20Guatemala"
+  },
+  {
+    id: "demo-branch-avia",
+    name: "Centro Comercial Avia",
+    address: "AVIA, 11 Calle 2-25, Cdad. de Guatemala 01010",
+    mapsUrl: "https://maps.google.com/?q=AVIA+11+Calle+2-25+Ciudad+de+Guatemala+01010",
+    wazeUrl: "https://waze.com/ul?q=AVIA%2011%20Calle%202-25%20Ciudad%20de%20Guatemala%2001010"
+  },
+  {
+    id: "demo-branch-carretera-salvador",
+    name: "Sucursal Carretera a El Salvador",
+    address: "Km. 15.8 Carretera a El Salvador",
+    mapsUrl: "https://maps.google.com/?q=Km.+15.8+Carretera+a+El+Salvador+Guatemala",
+    wazeUrl: "https://waze.com/ul?q=Km.%2015.8%20Carretera%20a%20El%20Salvador%20Guatemala"
+  },
+  {
+    id: "demo-branch-majadas",
+    name: "Sucursal Majadas",
+    address: "28av 5-20 Zona 11",
+    mapsUrl: "https://maps.google.com/?q=28av+5-20+Zona+11+Guatemala",
+    wazeUrl: "https://waze.com/ul?q=28av%205-20%20Zona%2011%20Guatemala"
+  },
+  {
+    id: "demo-branch-zona-9-mazda",
+    name: "Sucursal Zona 9 Edificio Mazda",
+    address: "1a. Calle 7-69, Zona 9. Edificio Mazda",
+    mapsUrl: "https://maps.google.com/?q=1a.+Calle+7-69+Zona+9+Edificio+Mazda+Guatemala",
+    wazeUrl: "https://waze.com/ul?q=1a.%20Calle%207-69%20Zona%209%20Edificio%20Mazda%20Guatemala"
+  }
+].map((branch) => ({
+  ...branch,
   phone: "+502 4016-7882",
-  mapsUrl: "https://maps.google.com/?q=Ruta+6+9-18+Zona+4+Guatemala",
-  wazeUrl: "https://waze.com/ul?q=Ruta%206%209-18%20Zona%204%20Guatemala",
   createdAt: new Date(),
   updatedAt: new Date()
-};
+}));
 
 type DemoVehicleSeed = {
   brand: string;
@@ -321,6 +353,7 @@ const baseVehicles: DemoVehicleSeed[] = [
 
 export const demoVehicles = baseVehicles.map((vehicle, index) => {
   const internalCode = `LM-DEMO-${String(index + 1).padStart(3, "0")}`;
+  const branch = demoBranches[index % demoBranches.length];
   return {
     id: internalCode,
     slug: `${vehicle.brand}-${vehicle.model}-${vehicle.year}-${internalCode}`.toLowerCase().replace(/[^a-z0-9]+/g, "-"),

@@ -45,9 +45,6 @@ export function FinancingPartners() {
             </motion.div>
           ))}
         </div>
-        <p className="mx-auto mt-6 max-w-2xl text-center text-sm text-muted-foreground">
-          Logotipos referenciales en formato propio. Sustituye por marcas oficiales solo si cuentas con autorización comercial.
-        </p>
       </motion.div>
     </section>
   );

@@ -4,6 +4,7 @@ import { ChevronRight, MessageCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { FinancingCalculator } from "@/components/financing-calculator";
+import { FinancingPartners } from "@/components/financing-partners";
 import { QuoteForm } from "@/components/quote-form";
 import { VehicleGallery } from "@/components/vehicle-gallery";
 import { formatGtq, whatsappUrl } from "@/lib/utils";
@@ -70,6 +71,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
           </aside>
         </div>
         <div className="mt-8"><FinancingCalculator price={Number(vehicle.priceGtq)} vehicleId={vehicle.id} /></div>
+        <FinancingPartners />
       </div>
     </div>
   );

@@ -50,7 +50,7 @@ export function PromoCarousel() {
         <ChevronRight />
       </button>
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between gap-4 bg-black/55 px-6 py-4 text-sm font-semibold text-white">
-        <span className="flex items-center gap-2"><MapPin size={17} /> Agencia Zona 10 · Roosevelt · Yurrita</span>
+        <span className="flex items-center gap-2"><MapPin size={17} /> Roosevelt · Avia · Carretera a El Salvador · Majadas · Zona 9</span>
         <span>Agenda tu cita: {contactPhoneDisplay}</span>
       </div>
     </div>

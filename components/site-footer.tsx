@@ -9,9 +9,7 @@ export function SiteFooter() {
       <div className="container-page grid gap-10 py-12 lg:grid-cols-[1.2fr_1fr_1fr]">
         <div>
           <h2 className="text-2xl font-black">Lemanza Motores</h2>
-          <p className="mt-3 max-w-md text-sm leading-6 text-white/75">
-            Marketplace automotriz para Guatemala con vehículos inspeccionados, planes de financiamiento y asesoría personalizada.
-          </p>
+          <p className="mt-3 max-w-md text-sm leading-6 text-white/75">Auténtico como tú.</p>
           <div className="mt-5 flex gap-3 text-white/80">
             <Phone size={18} /> PBX {process.env.PBX || contactPhoneDisplay}
           </div>

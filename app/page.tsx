@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { ArrowRight, BadgeCheck, CalendarDays, CreditCard, MessageCircle, ShieldCheck, Sparkles } from "lucide-react";
+import { FinancingPartners } from "@/components/financing-partners";
 import { FilterSearchBar } from "@/components/filter-search-bar";
 import { PromoCarousel } from "@/components/promo-carousel";
 import { SectionMotion } from "@/components/section-motion";
@@ -18,7 +19,7 @@ export default async function HomePage() {
   return (
     <>
       <section className="relative overflow-hidden bg-slate-950 text-white">
-        <Image src="/brand/hero-lemanza.jpeg" alt="Vehículo importado Lemanza Motores" fill className="object-cover opacity-55" priority />
+        <Image src="/brand/portada.jpeg" alt="Portada Lemanza Motores" fill className="object-cover opacity-55" priority />
         <div className="container-page relative grid min-h-[560px] items-center py-16">
           <div className="max-w-3xl">
             <h1 className="text-5xl font-black leading-tight sm:text-6xl">Tu próximo destino ya tiene forma: el modelo que buscas, te busca a ti.</h1>
@@ -31,6 +32,8 @@ export default async function HomePage() {
         <FilterSearchBar />
         <PromoCarousel />
       </section>
+
+      <FinancingPartners />
 
       <SectionMotion className="section container-page">
         <div className="flex flex-wrap items-end justify-between gap-4">

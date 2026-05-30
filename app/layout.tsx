@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { FinancingPartners } from "@/components/financing-partners";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { QueryProvider } from "@/components/query-provider";
@@ -31,7 +30,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <QueryProvider>
           <SiteHeader />
           <main>{children}</main>
-          <FinancingPartners />
           <SiteFooter />
         </QueryProvider>
       </body>

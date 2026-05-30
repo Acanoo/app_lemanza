@@ -1,26 +1,54 @@
 import { MapPin, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { contactPhoneDisplay } from "@/lib/contact";
-import { getBranches } from "@/lib/vehicles";
 
 export const metadata = { title: "Sucursales" };
-export const dynamic = "force-dynamic";
 
-const fallbackBranches = [
-  { id: "1", name: "Agencia Yurrita", address: "Ruta 6, 9-18, Zona 4, Guatemala", phone: contactPhoneDisplay, mapsUrl: "https://maps.google.com/?q=Ruta+6+9-18+Zona+4+Guatemala", wazeUrl: "https://waze.com/ul?q=Ruta%206%209-18%20Zona%204%20Guatemala" },
-  { id: "2", name: "Agencia Roosevelt", address: "Km. 14 Calzada Roosevelt, 5-25 Zona 3 de Mixco, Guatemala", phone: contactPhoneDisplay, mapsUrl: "https://maps.google.com/?q=Km+14+Calzada+Roosevelt+Mixco", wazeUrl: "https://waze.com/ul?q=Km%2014%20Calzada%20Roosevelt%20Mixco" },
-  { id: "3", name: "Agencia Zona 10", address: "10 avenida 14-73, zona 10 Guatemala", phone: contactPhoneDisplay, mapsUrl: "https://maps.google.com/?q=10+avenida+14-73+zona+10+Guatemala", wazeUrl: "https://waze.com/ul?q=10%20avenida%2014-73%20zona%2010%20Guatemala" }
+const branches = [
+  {
+    id: "lemanza-roosevelt",
+    name: "Sucursal Lemanza Motores",
+    address: "Km 14.5 Calz. Roosevelt Mixco, Calzada Roosevelt, Cdad. de Guatemala",
+    mapsUrl: "https://maps.google.com/?q=Km+14.5+Calz.+Roosevelt+Mixco+Calzada+Roosevelt+Ciudad+de+Guatemala",
+    wazeUrl: "https://waze.com/ul?q=Km%2014.5%20Calz.%20Roosevelt%20Mixco%20Calzada%20Roosevelt%20Ciudad%20de%20Guatemala"
+  },
+  {
+    id: "lemanza-avia",
+    name: "Centro Comercial Avia",
+    address: "AVIA, 11 Calle 2-25, Cdad. de Guatemala 01010",
+    mapsUrl: "https://maps.google.com/?q=AVIA+11+Calle+2-25+Ciudad+de+Guatemala+01010",
+    wazeUrl: "https://waze.com/ul?q=AVIA%2011%20Calle%202-25%20Ciudad%20de%20Guatemala%2001010"
+  },
+  {
+    id: "lemanza-carretera-salvador",
+    name: "Sucursal Carretera a El Salvador",
+    address: "Km. 15.8 Carretera a El Salvador",
+    mapsUrl: "https://maps.google.com/?q=Km.+15.8+Carretera+a+El+Salvador+Guatemala",
+    wazeUrl: "https://waze.com/ul?q=Km.%2015.8%20Carretera%20a%20El%20Salvador%20Guatemala"
+  },
+  {
+    id: "lemanza-majadas",
+    name: "Sucursal Majadas",
+    address: "28av 5-20 Zona 11",
+    mapsUrl: "https://maps.google.com/?q=28av+5-20+Zona+11+Guatemala",
+    wazeUrl: "https://waze.com/ul?q=28av%205-20%20Zona%2011%20Guatemala"
+  },
+  {
+    id: "lemanza-zona-9-mazda",
+    name: "Sucursal Zona 9 Edificio Mazda",
+    address: "1a. Calle 7-69, Zona 9. Edificio Mazda",
+    mapsUrl: "https://maps.google.com/?q=1a.+Calle+7-69+Zona+9+Edificio+Mazda+Guatemala",
+    wazeUrl: "https://waze.com/ul?q=1a.%20Calle%207-69%20Zona%209%20Edificio%20Mazda%20Guatemala"
+  }
 ];
 
-export default async function BranchesPage() {
-  const dbBranches = await getBranches();
-  const branches = dbBranches.length ? dbBranches : fallbackBranches;
+export default function BranchesPage() {
   return (
     <div className="container-page section">
       <p className="font-bold text-accent">Cobertura Guatemala</p>
       <h1 className="mt-2 text-4xl font-black">Sucursales</h1>
-      <div className="mt-8 grid gap-5 lg:grid-cols-3">
-        {branches.filter((branch) => branch.name !== "Agencia Virtual").map((branch) => (
+      <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        {branches.map((branch) => (
           <div key={branch.id} className="rounded-lg border bg-white p-6 shadow-soft">
             <MapPin className="text-accent" />
             <h2 className="mt-4 text-xl font-black">{branch.name}</h2>
