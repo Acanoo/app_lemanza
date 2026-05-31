@@ -208,22 +208,33 @@ export async function syncSuperAutosJackCatalog(): Promise<SuperAutosJackSyncRes
     };
   }
 
-  const branch = await prisma.branch.upsert({
-    where: { name: "Super Autos Jack" },
-    update: {
-      address: "Inventario de referencia desde Super Autos Jack",
-      phone: "+502 4016-7882",
-      mapsUrl: SOURCE_ORIGIN,
-      wazeUrl: SOURCE_ORIGIN
-    },
-    create: {
-      name: "Super Autos Jack",
-      address: "Inventario de referencia desde Super Autos Jack",
-      phone: "+502 4016-7882",
-      mapsUrl: SOURCE_ORIGIN,
-      wazeUrl: SOURCE_ORIGIN
-    }
-  });
+  let branch;
+  try {
+    branch = await prisma.branch.upsert({
+      where: { name: "Super Autos Jack" },
+      update: {
+        address: "Inventario de referencia desde Super Autos Jack",
+        phone: "+502 4016-7882",
+        mapsUrl: SOURCE_ORIGIN,
+        wazeUrl: SOURCE_ORIGIN
+      },
+      create: {
+        name: "Super Autos Jack",
+        address: "Inventario de referencia desde Super Autos Jack",
+        phone: "+502 4016-7882",
+        mapsUrl: SOURCE_ORIGIN,
+        wazeUrl: SOURCE_ORIGIN
+      }
+    });
+  } catch (error) {
+    return {
+      ok: false,
+      totalFound: vehicles.length,
+      totalUpserted: 0,
+      updatedAt: scrapedAt.toISOString(),
+      errors: [error instanceof Error ? error.message : "Unknown database error"]
+    };
+  }
 
   for (const vehicle of vehicles) {
     try {
