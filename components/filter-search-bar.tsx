@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { ChevronDown, ChevronUp, Search, SlidersHorizontal } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { brands, transmissions } from "@/lib/constants";
@@ -12,9 +12,10 @@ import { vehicleTypeVisuals } from "@/lib/vehicle-visuals";
 
 type FilterSearchBarProps = {
   compact?: boolean;
+  typeOptions?: string[];
 };
 
-export function FilterSearchBar({ compact = false }: FilterSearchBarProps) {
+export function FilterSearchBar({ compact = false, typeOptions }: FilterSearchBarProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState("");
@@ -41,7 +42,13 @@ export function FilterSearchBar({ compact = false }: FilterSearchBarProps) {
     router.push(`/catalogo?${params.toString()}`);
   }
 
-  const selectedType = vehicleTypeVisuals.find((item) => item.value === type) || vehicleTypeVisuals[0];
+  const availableTypes = useMemo(() => new Set(typeOptions ?? vehicleTypeVisuals.map((item) => item.value).filter(Boolean)), [typeOptions]);
+  const visibleTypeOptions = useMemo(() => vehicleTypeVisuals.filter((item) => item.value === "" || availableTypes.has(item.value)), [availableTypes]);
+  const selectedType = visibleTypeOptions.find((item) => item.value === type) || vehicleTypeVisuals[0];
+
+  useEffect(() => {
+    if (type && !availableTypes.has(type)) setType("");
+  }, [availableTypes, type]);
 
   return (
     <div className={cn("relative z-20 rounded-lg border bg-white p-3 shadow-soft", compact && "rounded-none border-x-0 shadow-none")}>
@@ -78,7 +85,7 @@ export function FilterSearchBar({ compact = false }: FilterSearchBarProps) {
               transition={{ duration: 0.18, ease: "easeOut" }}
               className="absolute left-0 top-[calc(100%+8px)] z-40 max-h-96 w-full min-w-72 overflow-y-auto rounded-lg border bg-white p-2 shadow-2xl"
             >
-              {vehicleTypeVisuals.map((item) => (
+              {visibleTypeOptions.map((item) => (
                 <button
                   key={item.label}
                   type="button"

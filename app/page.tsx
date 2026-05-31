@@ -8,13 +8,13 @@ import { PromoCarousel } from "@/components/promo-carousel";
 import { SectionMotion } from "@/components/section-motion";
 import { Button } from "@/components/ui/button";
 import { VehicleCard } from "@/components/vehicle-card";
-import { getVehicles } from "@/lib/vehicles";
+import { getVehicleFilterOptions, getVehicles } from "@/lib/vehicles";
 import { whatsappUrl } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const vehicles = await getVehicles({}, 6);
+  const [vehicles, filterOptions] = await Promise.all([getVehicles({}, 6), getVehicleFilterOptions()]);
 
   return (
     <>
@@ -29,7 +29,7 @@ export default async function HomePage() {
       </section>
 
       <section className="container-page -mt-10">
-        <FilterSearchBar />
+        <FilterSearchBar typeOptions={filterOptions.types} />
         <PromoCarousel />
       </section>
 

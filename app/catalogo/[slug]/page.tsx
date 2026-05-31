@@ -23,7 +23,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
   const vehicle = await getVehicleBySlug(slug);
   if (!vehicle) notFound();
 
-  const title = `${vehicle.brand} ${vehicle.model} ${vehicle.year} - ${vehicle.internalCode}`;
+  const title = `${vehicle.brand} ${vehicle.model} ${vehicle.year}`;
   const specs = [
     ["Tipo", vehicle.type], ["Marca", vehicle.brand], ["Modelo", vehicle.model], ["Línea/trim", vehicle.trim || "-"],
     ["Transmisión", vehicle.transmission], ["Año", vehicle.year], ["Kilometraje", `${vehicle.mileage.toLocaleString("es-GT")} km`],
@@ -37,7 +37,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
     <div className="bg-secondary/60">
       <div className="container-page py-10">
         <nav className="mb-5 flex items-center gap-2 text-sm text-muted-foreground">
-          <Link href="/">Inicio</Link><ChevronRight size={14} /><Link href="/catalogo">Catálogo</Link><ChevronRight size={14} /><span>{vehicle.internalCode}</span>
+          <Link href="/">Inicio</Link><ChevronRight size={14} /><Link href="/catalogo">Catálogo</Link><ChevronRight size={14} /><span>{title}</span>
         </nav>
         <div className="grid gap-8 lg:grid-cols-[1.35fr_0.85fr]">
           <div className="grid gap-6">

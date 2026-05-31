@@ -14,7 +14,6 @@ type VehicleCardProps = {
   vehicle: {
     id: string;
     slug: string;
-    internalCode: string;
     brand: string;
     model: string;
     year: number;
@@ -41,7 +40,6 @@ export function VehicleCard({ vehicle }: VehicleCardProps) {
         <CardContent>
           <p className="text-2xl font-black text-primary">{formatGtq(vehicle.priceGtq)}</p>
           <h3 className="mt-2 text-lg font-black">{vehicle.brand} {vehicle.model} {vehicle.year}</h3>
-          <p className="text-sm font-semibold text-accent">{vehicle.internalCode}</p>
           <div className="mt-4 grid gap-2 text-sm text-slate-600">
             <span className="flex items-center gap-2"><Settings size={16} /> {vehicle.motor} · {vehicle.transmission}</span>
             <span className="flex items-center gap-2"><Gauge size={16} /> {vehicle.mileage.toLocaleString("es-GT")} km</span>
