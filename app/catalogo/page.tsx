@@ -19,6 +19,9 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
         <div className="mb-7">
           <CatalogFilters />
         </div>
+        <p className="mb-3 rounded-md border bg-white px-4 py-3 text-sm font-semibold text-slate-600 shadow-soft">
+          Datos de referencia obtenidos desde Super Autos Jack.
+        </p>
         <p className="mb-4 text-sm font-semibold text-slate-600">{vehicles.length} vehículos encontrados</p>
         {vehicles.length ? (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">

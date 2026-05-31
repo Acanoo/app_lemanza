@@ -11,7 +11,8 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "scrape:autos": "tsx scripts/manual-sync.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -23,6 +24,7 @@
     "@radix-ui/react-slot": "^1.2.2",
     "@tanstack/react-query": "^5.76.1",
     "bcryptjs": "^3.0.2",
+    "cheerio": "^1.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.12.1",
