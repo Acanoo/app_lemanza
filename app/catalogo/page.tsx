@@ -1,13 +1,13 @@
 import { CatalogFilters } from "@/components/catalog-filters";
 import { VehicleCard } from "@/components/vehicle-card";
-import { getVehicles, type VehicleSearchParams } from "@/lib/vehicles";
+import { getVehicleFilterOptions, getVehicles, type VehicleSearchParams } from "@/lib/vehicles";
 
 export const metadata = { title: "Catálogo" };
 export const dynamic = "force-dynamic";
 
 export default async function CatalogPage({ searchParams }: { searchParams: Promise<VehicleSearchParams> }) {
   const params = await searchParams;
-  const vehicles = await getVehicles(params);
+  const [vehicles, filterOptions] = await Promise.all([getVehicles(params), getVehicleFilterOptions(params)]);
 
   return (
     <div className="bg-secondary/60">
@@ -17,7 +17,7 @@ export default async function CatalogPage({ searchParams }: { searchParams: Prom
           <h1 className="text-4xl font-black">Catálogo de vehículos</h1>
         </div>
         <div className="mb-7">
-          <CatalogFilters />
+          <CatalogFilters options={filterOptions} />
         </div>
         <p className="mb-3 rounded-md border bg-white px-4 py-3 text-sm font-semibold text-slate-600 shadow-soft">
           Datos de referencia obtenidos desde Super Autos Jack.
