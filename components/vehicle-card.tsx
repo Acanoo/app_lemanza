@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { VehiclePlateMask } from "@/components/vehicle-plate-mask";
 import { formatGtq } from "@/lib/utils";
 
 type VehicleCardProps = {
@@ -33,6 +34,7 @@ export function VehicleCard({ vehicle }: VehicleCardProps) {
       <Card className="h-full overflow-hidden transition hover:-translate-y-1 hover:shadow-xl">
         <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
           <Image src={vehicle.images[0]?.url || "/brand/logo.jpeg"} alt={vehicle.images[0]?.alt || vehicle.model} fill className="object-cover transition duration-500 hover:scale-105" />
+          <VehiclePlateMask />
           <Badge className="absolute left-3 top-3 bg-white/92 text-primary">{vehicle.status}</Badge>
         </div>
         <CardContent>
