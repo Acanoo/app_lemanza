@@ -6,6 +6,43 @@ const SOURCE_ORIGIN = "https://www.superautosjack.com.gt";
 const USED_CATALOG_URL = `${SOURCE_ORIGIN}/usados`;
 const USER_AGENT = "LemanzaMotoresInventorySync/1.0 (+https://app-lemanza-cars.vercel.app)";
 const SCRAPE_DELAY_MS = 1200;
+const ACTIVE_BRANCHES = [
+  {
+    name: "Sucursal Lemanza Motores",
+    address: "Km 14.5 Calz. Roosevelt Mixco, Calzada Roosevelt, Cdad. de Guatemala",
+    phone: "+502 4016-7882",
+    mapsUrl: "https://maps.google.com/?q=Km+14.5+Calz.+Roosevelt+Mixco+Calzada+Roosevelt+Ciudad+de+Guatemala",
+    wazeUrl: "https://waze.com/ul?q=Km%2014.5%20Calz.%20Roosevelt%20Mixco%20Calzada%20Roosevelt%20Ciudad%20de%20Guatemala"
+  },
+  {
+    name: "Centro Comercial Avia",
+    address: "AVIA, 11 Calle 2-25, Cdad. de Guatemala 01010",
+    phone: "+502 4016-7882",
+    mapsUrl: "https://maps.google.com/?q=AVIA+11+Calle+2-25+Ciudad+de+Guatemala+01010",
+    wazeUrl: "https://waze.com/ul?q=AVIA%2011%20Calle%202-25%20Ciudad%20de%20Guatemala%2001010"
+  },
+  {
+    name: "Sucursal Carretera a El Salvador",
+    address: "Km. 15.8 Carretera a El Salvador",
+    phone: "+502 4016-7882",
+    mapsUrl: "https://maps.google.com/?q=Km.+15.8+Carretera+a+El+Salvador+Guatemala",
+    wazeUrl: "https://waze.com/ul?q=Km.%2015.8%20Carretera%20a%20El%20Salvador%20Guatemala"
+  },
+  {
+    name: "Sucursal Majadas",
+    address: "28av 5-20 Zona 11",
+    phone: "+502 4016-7882",
+    mapsUrl: "https://maps.google.com/?q=28av+5-20+Zona+11+Guatemala",
+    wazeUrl: "https://waze.com/ul?q=28av%205-20%20Zona%2011%20Guatemala"
+  },
+  {
+    name: "Sucursal Zona 9 Edificio Mazda",
+    address: "1a. Calle 7-69, Zona 9. Edificio Mazda",
+    phone: "+502 4016-7882",
+    mapsUrl: "https://maps.google.com/?q=1a.+Calle+7-69+Zona+9+Edificio+Mazda+Guatemala",
+    wazeUrl: "https://waze.com/ul?q=1a.%20Calle%207-69%20Zona%209%20Edificio%20Mazda%20Guatemala"
+  }
+];
 
 export type ScrapedSuperAutosJackVehicle = {
   brand: string;
@@ -208,24 +245,17 @@ export async function syncSuperAutosJackCatalog(): Promise<SuperAutosJackSyncRes
     };
   }
 
-  let branch;
+  let branches;
   try {
-    branch = await prisma.branch.upsert({
-      where: { name: "Super Autos Jack" },
-      update: {
-        address: "Inventario de referencia desde Super Autos Jack",
-        phone: "+502 4016-7882",
-        mapsUrl: SOURCE_ORIGIN,
-        wazeUrl: SOURCE_ORIGIN
-      },
-      create: {
-        name: "Super Autos Jack",
-        address: "Inventario de referencia desde Super Autos Jack",
-        phone: "+502 4016-7882",
-        mapsUrl: SOURCE_ORIGIN,
-        wazeUrl: SOURCE_ORIGIN
-      }
-    });
+    branches = await Promise.all(
+      ACTIVE_BRANCHES.map((branch) =>
+        prisma.branch.upsert({
+          where: { name: branch.name },
+          update: branch,
+          create: branch
+        })
+      )
+    );
   } catch (error) {
     return {
       ok: false,
@@ -236,8 +266,9 @@ export async function syncSuperAutosJackCatalog(): Promise<SuperAutosJackSyncRes
     };
   }
 
-  for (const vehicle of vehicles) {
+  for (const [index, vehicle] of vehicles.entries()) {
     try {
+      const branch = branches[index % branches.length];
       const slug = slugify(`${vehicle.brand}-${vehicle.model}-${vehicle.year}-${vehicle.sourceCode}`);
       const images = vehicle.images.map((url, position) => ({
         url,
