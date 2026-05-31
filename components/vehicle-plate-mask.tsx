@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 
 const variants = {
-  card: "left-[6%] top-[38%] h-[18%] w-[28%] rotate-[7deg] rounded-sm",
-  gallery: "left-[6%] top-[40%] h-[16%] w-[26%] rotate-[7deg] rounded-md",
-  thumbnail: "left-[6%] top-[40%] h-[18%] w-[30%] rotate-[7deg] rounded-[3px]"
+  card: "left-[12%] top-[52%] h-[12%] w-[14%] rotate-[8deg] rounded-[2px]",
+  gallery: "left-[12%] top-[52%] h-[11%] w-[13%] rotate-[8deg] rounded",
+  thumbnail: "left-[12%] top-[52%] h-[12%] w-[14%] rotate-[8deg] rounded-[2px]"
 };
 
 export function VehiclePlateMask({ variant = "card" }: { variant?: keyof typeof variants }) {
@@ -11,7 +11,7 @@ export function VehiclePlateMask({ variant = "card" }: { variant?: keyof typeof 
     <span
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute z-10 bg-white/45 shadow-sm backdrop-blur-xl backdrop-saturate-0",
+        "pointer-events-none absolute z-10 bg-white/70 shadow-sm backdrop-blur-md backdrop-saturate-0",
         variants[variant]
       )}
     />
