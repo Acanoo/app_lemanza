@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
+import { PublicChrome } from "@/components/public-chrome";
 import { QueryProvider } from "@/components/query-provider";
 import "./globals.css";
 
@@ -28,9 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es-GT">
       <body>
         <QueryProvider>
-          <SiteHeader />
-          <main>{children}</main>
-          <SiteFooter />
+          <PublicChrome>{children}</PublicChrome>
         </QueryProvider>
       </body>
     </html>
