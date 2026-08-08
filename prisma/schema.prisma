@@ -190,3 +190,11 @@ model Role {
   name  RoleName @unique
   users User[]
 }
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

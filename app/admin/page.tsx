@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import {
-  Activity,
   BarChart3,
   Building2,
   Car,
@@ -13,14 +12,22 @@ import {
   LayoutDashboard,
   Mail,
   RefreshCw,
+  Settings,
   ShieldCheck,
   Tags,
+  UserPlus,
   Users
 } from "lucide-react";
+import { AdminBranchManager } from "@/components/admin-branch-manager";
+import { AdminSettingsForm } from "@/components/admin-settings-form";
+import { AdminUserActions } from "@/components/admin-user-actions";
+import { AdminUserCreateForm } from "@/components/admin-user-create-form";
 import { AdminVehicleActions } from "@/components/admin-vehicle-actions";
+import { AdminVehicleCreateForm } from "@/components/admin-vehicle-create-form";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
+import { getSiteSettings } from "@/lib/site-settings";
 import { formatGtq } from "@/lib/utils";
 
 export const metadata = { title: "Admin" };
@@ -59,9 +66,11 @@ async function getAdminData() {
       quotes,
       subscribers,
       branches,
+      users,
       statusGroups,
       typeGroups,
-      brandGroups
+      brandGroups,
+      settings
     ] = await Promise.all([
       prisma.vehicle.count(),
       prisma.vehicle.count({ where: { status: { in: ["DISPONIBLE", "USADO", "NUEVO"] } } }),
@@ -82,9 +91,11 @@ async function getAdminData() {
       }),
       prisma.newsletterSubscriber.findMany({ take: 8, orderBy: { createdAt: "desc" } }),
       prisma.branch.findMany({ include: { _count: { select: { vehicles: true } } }, orderBy: { name: "asc" } }),
+      prisma.user.findMany({ take: 20, orderBy: { createdAt: "desc" }, include: { role: true } }),
       prisma.vehicle.groupBy({ by: ["status"], _count: { status: true }, orderBy: { status: "asc" } }),
       prisma.vehicle.groupBy({ by: ["type"], _count: { type: true }, orderBy: { type: "asc" } }),
-      prisma.vehicle.groupBy({ by: ["brand"], _count: { brand: true }, orderBy: { _count: { brand: "desc" } }, take: 8 })
+      prisma.vehicle.groupBy({ by: ["brand"], _count: { brand: true }, orderBy: { _count: { brand: "desc" } }, take: 8 }),
+      getSiteSettings()
     ]);
 
     const totalInventoryValue = vehicles.reduce((sum, vehicle) => sum + Number(vehicle.manualPriceGtq ?? vehicle.priceGtq), 0);
@@ -106,9 +117,11 @@ async function getAdminData() {
       quotes,
       subscribers,
       branches,
+      users,
       statusGroups,
       typeGroups,
-      brandGroups
+      brandGroups,
+      settings
     };
   } catch {
     return {
@@ -127,9 +140,11 @@ async function getAdminData() {
       quotes: [],
       subscribers: [],
       branches: [],
+      users: [],
       statusGroups: [],
       typeGroups: [],
-      brandGroups: []
+      brandGroups: [],
+      settings: await getSiteSettings()
     };
   }
 }
@@ -155,10 +170,12 @@ function AdminShell({ data }: { data: AdminData }) {
   const nav = [
     ["Dashboard", "#dashboard", LayoutDashboard],
     ["Inventario", "#inventario", Car],
+    ["Agregar vehiculo", "#nuevo-vehiculo", ClipboardList],
     ["Cotizaciones", "#cotizaciones", Inbox],
     ["Newsletter", "#newsletter", Mail],
     ["Sucursales", "#sucursales", Building2],
-    ["Operaciones", "#operaciones", Activity]
+    ["Usuarios", "#usuarios", UserPlus],
+    ["Ajustes", "#ajustes", Settings]
   ] satisfies [string, string, LucideIcon][];
 
   return (
@@ -266,9 +283,9 @@ function AdminShell({ data }: { data: AdminData }) {
             <div className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-4">
               <div>
                 <h2 className="font-black">Inventario administrable</h2>
-                <p className="text-sm text-slate-500">Actualiza estado, precio manual o elimina unidades del catalogo</p>
+                <p className="text-sm text-slate-500">Actualiza estado, precio, datos completos o elimina unidades del catalogo</p>
               </div>
-              <Button asChild size="sm" variant="outline"><Link href="/api/admin/vehicles" target="_blank"><ClipboardList size={16} /> API inventario</Link></Button>
+              <Button asChild size="sm"><a href="#nuevo-vehiculo"><ClipboardList size={16} /> Agregar manual</a></Button>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full min-w-[1040px] text-left text-sm">
@@ -305,6 +322,16 @@ function AdminShell({ data }: { data: AdminData }) {
                   ))}
                 </tbody>
               </table>
+            </div>
+          </section>
+
+          <section id="nuevo-vehiculo" className="rounded-md border bg-white shadow-sm">
+            <div className="border-b px-5 py-4">
+              <h2 className="font-black">Agregar vehiculo manualmente</h2>
+              <p className="text-sm text-slate-500">Crea una unidad con todos los campos actuales y publicala directamente en el catalogo.</p>
+            </div>
+            <div className="p-5">
+              <AdminVehicleCreateForm branches={data.branches.map((branch) => ({ id: branch.id, name: branch.name }))} />
             </div>
           </section>
 
@@ -352,28 +379,54 @@ function AdminShell({ data }: { data: AdminData }) {
             <div id="sucursales" className="rounded-md border bg-white shadow-sm">
               <div className="border-b px-5 py-4">
                 <h2 className="font-black">Sucursales</h2>
-                <p className="text-sm text-slate-500">Inventario por ubicacion</p>
+                <p className="text-sm text-slate-500">Crea, edita y elimina ubicaciones del sitio.</p>
               </div>
-              <div className="divide-y">
-                {data.branches.map((branch) => (
-                  <div key={branch.id} className="px-5 py-4">
-                    <div className="flex justify-between gap-3">
-                      <p className="font-black">{branch.name}</p>
-                      <Badge>{branch._count.vehicles}</Badge>
-                    </div>
-                    <p className="mt-1 text-sm text-slate-500">{branch.address}</p>
-                    <p className="text-sm text-slate-500">{branch.phone}</p>
-                  </div>
-                ))}
+              <div className="p-5">
+                <AdminBranchManager branches={data.branches} />
               </div>
             </div>
 
-            <div id="operaciones" className="rounded-md border bg-white shadow-sm">
+            <div id="usuarios" className="rounded-md border bg-white shadow-sm">
               <div className="border-b px-5 py-4">
-                <h2 className="font-black">Operaciones del sitio</h2>
-                <p className="text-sm text-slate-500">Accesos rapidos para administracion</p>
+                <h2 className="font-black">Trabajadores y accesos</h2>
+                <p className="text-sm text-slate-500">Registra usuarios internos y asigna el acceso definido por el administrador.</p>
               </div>
-              <div className="grid gap-4 p-5 md:grid-cols-2">
+              <div className="grid gap-5 p-5">
+                <AdminUserCreateForm />
+                <div className="overflow-x-auto rounded border">
+                  <table className="w-full min-w-[620px] text-left text-sm">
+                    <thead className="bg-slate-50 text-xs uppercase text-slate-500">
+                      <tr>
+                        <th className="px-4 py-3">Usuario</th>
+                        <th className="px-4 py-3">Rol</th>
+                        <th className="px-4 py-3">Creado</th>
+                        <th className="px-4 py-3">Acceso</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      {data.users.map((user) => (
+                        <tr key={user.id}>
+                          <td className="px-4 py-3"><strong>{user.name}</strong><p className="text-xs text-slate-500">{user.email}</p></td>
+                          <td className="px-4 py-3"><Badge>{user.role.name}</Badge></td>
+                          <td className="px-4 py-3 text-xs text-slate-500">{shortDate(user.createdAt)}</td>
+                          <td className="px-4 py-3"><AdminUserActions id={user.id} role={user.role.name} /></td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="ajustes" className="rounded-md border bg-white shadow-sm">
+            <div className="border-b px-5 py-4">
+              <h2 className="font-black">Ajustes</h2>
+              <p className="text-sm text-slate-500">Contenido publico, herramientas operativas, integraciones y accesos del sitio.</p>
+            </div>
+            <div className="grid gap-6 p-5">
+              <AdminSettingsForm settings={data.settings} />
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                 <a href="/api/admin/sync-superautosjack" className="rounded border p-4 transition hover:border-primary hover:bg-slate-50">
                   <RefreshCw className="text-primary" />
                   <p className="mt-3 font-black">Sincronizar inventario</p>
@@ -389,11 +442,11 @@ function AdminShell({ data }: { data: AdminData }) {
                   <p className="mt-3 font-black">Exportar JSON</p>
                   <p className="mt-1 text-sm text-slate-500">Consulta rapida de unidades y metadatos.</p>
                 </a>
-                <div className="rounded border p-4">
+                <a href="/api/admin/users" target="_blank" className="rounded border p-4 transition hover:border-primary hover:bg-slate-50">
                   <Users className="text-primary" />
-                  <p className="mt-3 font-black">Roles administrativos</p>
-                  <p className="mt-1 text-sm text-slate-500">Protegido por Basic Auth y roles en base para crecimiento.</p>
-                </div>
+                  <p className="mt-3 font-black">Usuarios JSON</p>
+                  <p className="mt-1 text-sm text-slate-500">Consulta interna de usuarios registrados.</p>
+                </a>
               </div>
             </div>
           </section>

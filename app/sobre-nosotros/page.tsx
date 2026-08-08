@@ -1,43 +1,33 @@
 import Image from "next/image";
 import type { LucideIcon } from "lucide-react";
 import { BadgeCheck, ClipboardCheck, Eye, HandHeart, ShieldCheck, Target, TimerReset, Users } from "lucide-react";
+import { getSiteSettings } from "@/lib/site-settings";
 
 export const metadata = {
   title: "Sobre Nosotros",
-  description: "Conoce quiénes somos, misión, visión, valores y equipo de Lemanza Motores."
+  description: "Conoce quienes somos, mision, vision, valores y equipo de Lemanza Motores."
 };
+export const dynamic = "force-dynamic";
 
-const pillars: { title: string; copy: string; Icon: LucideIcon }[] = [
-  {
-    title: "Visión",
-    Icon: Eye,
-    copy: "Ser una importadora de vehículos reconocida a nivel nacional por su excelencia en servicio, variedad de automóviles y compromiso con la satisfacción del cliente, posicionándonos como una de las empresas líderes en el mercado automotriz."
-  },
-  {
-    title: "Misión",
-    Icon: Target,
-    copy: "Brindar a nuestros clientes vehículos importados de alta calidad, garantizando confianza, transparencia y un excelente servicio antes, durante y después de cada compra, satisfaciendo sus necesidades de movilidad con precios competitivos y asesoría personalizada."
-  }
-];
-
-const values: { title: string; Icon: LucideIcon }[] = [
-  { title: "Actitud de servicio", Icon: HandHeart },
-  { title: "Cumplimiento", Icon: BadgeCheck },
-  { title: "Disciplina", Icon: TimerReset },
-  { title: "Respeto", Icon: ShieldCheck }
-];
+const valueIcons = [HandHeart, BadgeCheck, TimerReset, ShieldCheck];
 
 const team = [
-  { name: "Dary López", role: "Gerente General", level: "top" },
+  { name: "Dary Lopez", role: "Gerente General", level: "top" },
   { name: "Emerson Santizo", role: "Jefe de operaciones", level: "lead" },
-  { name: "Nancy Escobar", role: "Jefa de logística y comercio exterior", level: "lead" },
-  { name: "Alisson Turuy", role: "Jefe de Administración de Personal y Finanzas Corporativas", level: "lead" },
-  { name: "Marco Cano", role: "Jefe de servicio técnico", level: "lead" },
-  { name: "Jennifer Marroquín", role: "Jefe de departamento Comercial y Marketing", level: "lead" }
+  { name: "Nancy Escobar", role: "Jefa de logistica y comercio exterior", level: "lead" },
+  { name: "Alisson Turuy", role: "Jefe de Administracion de Personal y Finanzas Corporativas", level: "lead" },
+  { name: "Marco Cano", role: "Jefe de servicio tecnico", level: "lead" },
+  { name: "Jennifer Marroquin", role: "Jefe de departamento Comercial y Marketing", level: "lead" }
 ];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const settings = await getSiteSettings();
   const [manager, ...leaders] = team;
+  const pillars: { title: string; copy: string; Icon: LucideIcon }[] = [
+    { title: "Vision", Icon: Eye, copy: settings.vision },
+    { title: "Mision", Icon: Target, copy: settings.mission }
+  ];
+  const values: { title: string; Icon: LucideIcon }[] = settings.values.map((title, index) => ({ title, Icon: valueIcons[index % valueIcons.length] }));
 
   return (
     <div className="bg-secondary/60">
@@ -47,11 +37,9 @@ export default function AboutPage() {
         <div className="container-page relative grid min-h-[620px] content-center py-20">
           <div className="max-w-3xl">
             <p className="font-bold text-accent">Sobre Nosotros</p>
-            <h1 className="mt-3 text-5xl font-black leading-tight md:text-6xl">¿Quiénes somos?</h1>
+            <h1 className="mt-3 text-5xl font-black leading-tight md:text-6xl">Quienes somos</h1>
             <div className="mt-8 max-w-2xl rounded-lg border border-accent/70 bg-primary/78 p-6 shadow-soft backdrop-blur">
-              <p className="text-lg leading-8 text-white/90">
-                Somos una empresa local comprometida con la excelencia en logística y transporte. Nos especializamos en diseñar soluciones integrales de movilidad para diversos sectores industriales y comerciales, sin descuidar la calidez y eficiencia que el público general merece.
-              </p>
+              <p className="text-lg leading-8 text-white/90">{settings.aboutIntro}</p>
             </div>
           </div>
         </div>

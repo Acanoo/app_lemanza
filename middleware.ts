@@ -1,6 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
+async function hasDatabaseAdminAccess(request: NextRequest, header: string) {
+  try {
+    const response = await fetch(new URL("/api/auth/admin-basic", request.nextUrl.origin), {
+      method: "POST",
+      headers: { authorization: header },
+      cache: "no-store"
+    });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
+export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname === "/api/admin/sync-superautosjack") return NextResponse.next();
 
   const protectedPath = request.nextUrl.pathname.startsWith("/admin") || request.nextUrl.pathname.startsWith("/api/admin");
@@ -10,17 +23,14 @@ export function middleware(request: NextRequest) {
   const expectedEmail = process.env.ADMIN_EMAIL;
   const expectedPassword = process.env.ADMIN_PASSWORD;
 
-  if (!expectedEmail || !expectedPassword) {
-    return new NextResponse("Admin credentials are not configured", { status: 503 });
-  }
-
   if (header?.startsWith("Basic ")) {
     try {
       const decoded = atob(header.replace("Basic ", ""));
       const separatorIndex = decoded.indexOf(":");
       const email = decoded.slice(0, separatorIndex);
       const password = decoded.slice(separatorIndex + 1);
-      if (separatorIndex > -1 && email === expectedEmail && password === expectedPassword) return NextResponse.next();
+      if (separatorIndex > -1 && expectedEmail && expectedPassword && email === expectedEmail && password === expectedPassword) return NextResponse.next();
+      if (await hasDatabaseAdminAccess(request, header)) return NextResponse.next();
     } catch {
       // Fall through to the auth challenge below.
     }

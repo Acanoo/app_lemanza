@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -59,6 +60,9 @@ export function AdminVehicleActions({ id, status, priceGtq }: { id: string; stat
         aria-label="Precio manual"
       />
       <Button type="button" size="sm" onClick={updateVehicle} disabled={busy}>Guardar</Button>
+      <Button asChild type="button" size="sm" variant="outline">
+        <Link href={`/admin/vehiculos/${id}`}>Editar completo</Link>
+      </Button>
       <Button type="button" size="sm" variant="outline" onClick={deleteVehicle} disabled={busy}>Eliminar</Button>
     </div>
   );

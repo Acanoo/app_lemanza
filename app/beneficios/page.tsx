@@ -1,18 +1,16 @@
 import type { LucideIcon } from "lucide-react";
 import { BadgeCheck, CalendarClock, Car, Handshake, ShieldCheck, Tags } from "lucide-react";
+import { getSiteSettings } from "@/lib/site-settings";
 
 export const metadata = { title: "Beneficios" };
+export const dynamic = "force-dynamic";
 
-const benefits: [string, LucideIcon][] = [
-  ["Vehículos inspeccionados", ShieldCheck],
-  ["Usados exclusivamente de agencia", Car],
-  ["Horarios cómodos", CalendarClock],
-  ["Atención fines de semana y días festivos", BadgeCheck],
-  ["Asesoramiento personalizado", Handshake],
-  ["Más de 25 marcas disponibles", Tags]
-];
+const icons = [ShieldCheck, Car, CalendarClock, BadgeCheck, Handshake, Tags];
 
-export default function BenefitsPage() {
+export default async function BenefitsPage() {
+  const settings = await getSiteSettings();
+  const benefits: [string, LucideIcon][] = settings.benefits.map((label, index) => [label, icons[index % icons.length]]);
+
   return (
     <div className="container-page section">
       <p className="font-bold text-accent">Compra con confianza</p>
