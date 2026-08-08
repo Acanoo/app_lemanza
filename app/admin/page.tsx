@@ -11,7 +11,6 @@ import {
   Inbox,
   LayoutDashboard,
   Mail,
-  RefreshCw,
   Settings,
   ShieldCheck,
   Tags,
@@ -20,6 +19,7 @@ import {
 } from "lucide-react";
 import { AdminBranchManager } from "@/components/admin-branch-manager";
 import { AdminSettingsForm } from "@/components/admin-settings-form";
+import { AdminSyncButton } from "@/components/admin-sync-button";
 import { AdminUserActions } from "@/components/admin-user-actions";
 import { AdminUserCreateForm } from "@/components/admin-user-create-form";
 import { AdminVehicleActions } from "@/components/admin-vehicle-actions";
@@ -427,11 +427,7 @@ function AdminShell({ data }: { data: AdminData }) {
             <div className="grid gap-6 p-5">
               <AdminSettingsForm settings={data.settings} />
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                <a href="/api/admin/sync-superautosjack" className="rounded border p-4 transition hover:border-primary hover:bg-slate-50">
-                  <RefreshCw className="text-primary" />
-                  <p className="mt-3 font-black">Sincronizar inventario</p>
-                  <p className="mt-1 text-sm text-slate-500">Ejecuta la importacion configurada desde el origen actual.</p>
-                </a>
+                <AdminSyncButton />
                 <Link href="/catalogo" target="_blank" className="rounded border p-4 transition hover:border-primary hover:bg-slate-50">
                   <Car className="text-primary" />
                   <p className="mt-3 font-black">Revisar catalogo publico</p>
